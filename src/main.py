@@ -48,6 +48,8 @@ def add_product_to_cart(product_name: str, db=Depends(get_db)):
 def change_product_amount_in_cart(product_name: str, new_amount: int, db=Depends(get_db)):
     if new_amount < 0:
         raise HTTPException(status_code=404, detail=f"Product amount must be a positive number")
+    if new_amount > 100_000_000:
+        raise HTTPException(status_code=404, detail=f"Too big amount")
     if new_amount == 0:
         crud.remove_product_from_cart(db, product_name)
         return None
