@@ -6,9 +6,9 @@ from fastapi import FastAPI, HTTPException, Depends
 import crud
 import models
 import schemas
-from database import SessionLocal, engine
+from database import SessionLocal, engine, Base
 
-models.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Electronic Store"
