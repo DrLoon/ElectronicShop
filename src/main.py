@@ -4,7 +4,6 @@ import uvicorn
 from fastapi import FastAPI, HTTPException, Depends
 
 import crud
-import models
 import schemas
 from database import SessionLocal, engine, Base
 
@@ -41,18 +40,18 @@ def get_product_names(name: str = None, price: float = None, sort_by_name: bool 
 
 
 @app.post("/add_product_to_cart", response_model=schemas.Cart_item)
-def add_product_to_cart(product_id: int, db=Depends(get_db)):
-    return crud.add_product_to_cart(db, product_id)
+def add_product_to_cart(product_name: str, db=Depends(get_db)):
+    return crud.add_product_to_cart(db, product_name)
 
 
 @app.post("/change_cart_product_amount", response_model=Optional[schemas.Cart_item])
-def change_product_amount_in_cart(product_id: int, new_amount: int, db=Depends(get_db)):
+def change_product_amount_in_cart(product_name: str, new_amount: int, db=Depends(get_db)):
     if new_amount < 0:
         raise HTTPException(status_code=404, detail=f"Product amount must be a positive number")
     if new_amount == 0:
-        crud.remove_product_from_cart(db, product_id)
+        crud.remove_product_from_cart(db, product_name)
         return None
-    return crud.set_cart_product_amount(db, product_id, new_amount)
+    return crud.set_cart_product_amount(db, product_name, new_amount)
 
 
 if __name__ == '__main__':

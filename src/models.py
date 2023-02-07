@@ -1,4 +1,4 @@
-from sqlalchemy import MetaData, Integer, String, Table, Column, Float, ForeignKey
+from sqlalchemy import Integer, String, Column, Float, ForeignKey
 
 from database import Base
 
@@ -6,7 +6,7 @@ from database import Base
 class Product_DB(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
+    name = Column(String, nullable=False, unique=True)
     price = Column(Float, nullable=False)
 
 class Cart_DB(Base):
