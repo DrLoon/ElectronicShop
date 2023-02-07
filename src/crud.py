@@ -7,27 +7,34 @@ import schemas
 
 
 def get_products_raw(db: Session, name: str = None, price: float = None, sort_by_name: bool = False,
-                     sort_by_price: bool = False):
+                     sort_by_price: bool = False, ascending_name: bool = True, ascending_price: bool = True):
     res = db.query(models.Product_DB)
     if name:
         res = res.filter(models.Product_DB.name == name)
     if price:
         res = res.filter(models.Product_DB.price == price)
     if sort_by_name:
-        res = res.order_by(models.Product_DB.name.asc())
+        if ascending_name:
+            res = res.order_by(models.Product_DB.name.asc())
+        else:
+            res = res.order_by(models.Product_DB.name.desc())
     if sort_by_price:
-        res = res.order_by(models.Product_DB.price.asc())
+        if ascending_price:
+            res = res.order_by(models.Product_DB.price.asc())
+        else:
+            res = res.order_by(models.Product_DB.price.desc())
     return res
 
 
 def get_products(db: Session, name: str = None, price: float = None, sort_by_name: bool = False,
-                 sort_by_price: bool = False):
-    return get_products_raw(db, name, price, sort_by_name, sort_by_price).all()
+                 sort_by_price: bool = False, ascending_name: bool = True, ascending_price: bool = True):
+    return get_products_raw(db, name, price, sort_by_name, sort_by_price, ascending_name, ascending_price).all()
 
 
 def get_product_names(db: Session, name: str = None, price: float = None, sort_by_name: bool = False,
-                      sort_by_price: bool = False):
-    res = get_products_raw(db, name, price, sort_by_name, sort_by_price).with_entities(models.Product_DB.name)
+                      sort_by_price: bool = False, ascending_name: bool = True, ascending_price: bool = True):
+    res = get_products_raw(db, name, price, sort_by_name, sort_by_price, ascending_name, ascending_price).with_entities(
+        models.Product_DB.name)
     return [i[0] for i in res]
 
 

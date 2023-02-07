@@ -29,14 +29,14 @@ def add_product(product: schemas.Product, db=Depends(get_db)):
 
 @app.get("/products/", response_model=List[schemas.Product])
 def get_products(name: str = None, price: float = None, sort_by_name: bool = False, sort_by_price: bool = False,
-                 db=Depends(get_db)):
-    return crud.get_products(db, name, price, sort_by_name, sort_by_price)
+                 ascending_name: bool = True, ascending_price: bool = True, db=Depends(get_db)):
+    return crud.get_products(db, name, price, sort_by_name, sort_by_price, ascending_name, ascending_price)
 
 
 @app.get("/product_names/", response_model=List[str])
 def get_product_names(name: str = None, price: float = None, sort_by_name: bool = False, sort_by_price: bool = False,
-                      db=Depends(get_db)):
-    return crud.get_product_names(db, name, price, sort_by_name, sort_by_price)
+                      ascending_name: bool = True, ascending_price: bool = True, db=Depends(get_db)):
+    return crud.get_product_names(db, name, price, sort_by_name, sort_by_price, ascending_name, ascending_price)
 
 
 @app.post("/add_product_to_cart", response_model=schemas.Cart_item)
