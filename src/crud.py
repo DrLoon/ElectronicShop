@@ -40,7 +40,7 @@ def get_product_names(db: Session, name: str = None, price: float = None, sort_b
 
 def add_product(db: Session, product: schemas.Product):
     try:
-        pr_db = models.Product_DB(name=product.name, price=product.price)
+        pr_db = models.Product_DB(**product.dict())
         db.add(pr_db)
         db.commit()
         db.refresh(pr_db)
@@ -63,7 +63,7 @@ def add_product_to_cart(db: Session, product_name: str):
     except exc.IntegrityError:  # if UniqueViolation exception
         raise HTTPException(status_code=404, detail=f"Probably, such a product has already been added to the cart")
 
-    return schemas.Cart_item(product=res, amount=1, total_price=res.price)
+    return cart_db
 
 
 def remove_product_from_cart(db: Session, product_name: str):
@@ -87,4 +87,4 @@ def set_cart_product_amount(db: Session, product_name: str, new_amount: int):
     cart_item.total_price = new_amount * pr.price
     db.commit()
     db.refresh(cart_item)
-    return schemas.Cart_item(product=pr, amount=cart_item.amount, total_price=cart_item.total_price)
+    return cart_item

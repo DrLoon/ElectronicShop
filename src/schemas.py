@@ -10,6 +10,9 @@ class Product(BaseModel):
 
 
 class Cart_item(BaseModel):
-    product: Product
+    product_id: int
     amount: int = Field(gt=0)
     total_price: float = Field(ge=0)
+
+    class Config:
+        orm_mode = True
